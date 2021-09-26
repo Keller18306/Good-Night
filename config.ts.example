@@ -1,0 +1,7 @@
+export const config: {
+    access_token: string,
+    peerId: number
+} = {
+    access_token: '',
+    peerId: 2000000249
+}

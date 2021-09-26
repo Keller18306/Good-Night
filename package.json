@@ -1,0 +1,19 @@
+{
+  "name": "good-night",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Keller",
+  "license": "MIT",
+  "dependencies": {
+    "cron": "^1.8.2",
+    "vk-io": "^4.4.0"
+  },
+  "devDependencies": {
+    "@types/cron": "^1.7.3",
+    "@types/node": "^16.10.1"
+  }
+}
