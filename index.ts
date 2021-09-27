@@ -92,7 +92,7 @@ function getRandomSmile(): string {
 
     if (i == 0) return '';
 
-    return ' ' + list[i]
+    return ' ' + list[i-1]
 }
 
 const vk = new VK({
