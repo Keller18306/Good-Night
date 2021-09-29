@@ -121,4 +121,4 @@ async function startSend() {
     ])
 }
 
-new CronJob('0 59 23 * * *', startSend, null, true).start()
+new CronJob('0 0 22 * * *', startSend, null, true).start()
