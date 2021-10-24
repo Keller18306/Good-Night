@@ -1,7 +1,8 @@
-import { getRandomId, VK } from 'vk-io'
+import { API, getRandomId, VK } from 'vk-io'
 import { config } from './config'
 import { randomInt } from 'crypto'
 import { CronJob } from 'cron'
+import { APIMessages } from './node_modules/vk-io/lib/api/schemas/methods'
 
 function getRandomSticker(): number {
     const list: number[] = [
@@ -94,16 +95,32 @@ function getRandomSmile(): string {
 
     if (i == 0) return '';
 
-    return ' ' + list[i-1]
+    return ' ' + list[i - 1]
+}
+
+interface ExtendedMessages extends APIMessages {
+    markAsUnreadConversation(params: any): Promise<any>
+}
+
+interface ExtendedAPI extends API {
+    messages: ExtendedMessages
+}
+
+interface ExtendedVK extends VK {
+    api: ExtendedAPI
 }
 
 const vk = new VK({
     token: config.access_token,
     apiMode: 'parallel_selected',
     apiExecuteMethods: ['messages.send']
-})
+}) as ExtendedVK
 
 async function startSend() {
+    await vk.api.account.setOnline({})
+
+    const chat = (await vk.api.messages.getConversationsById({ peer_ids: config.peerId })).items[0]
+
     await Promise.all([
         vk.api.messages.setActivity({ type: 'typing', peer_id: config.peerId }),
         new Promise(res => setTimeout(res, 5e3))
@@ -121,6 +138,10 @@ async function startSend() {
             sticker_id: getRandomSticker()
         })
     ])
+
+    if (chat.unread_count && chat.is_marked_unread) await vk.api.messages.markAsUnreadConversation({ peer_id: config.peerId })
+
+    await vk.api.account.setOffline({})
 }
 
 new CronJob('0 0 22 * * *', startSend, null, true).start()
