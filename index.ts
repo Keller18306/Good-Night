@@ -139,3 +139,5 @@ async function startSend() {
 }
 
 new CronJob('0 0 22 * * *', startSend, null, true).start()
+
+console.log('Script started')
